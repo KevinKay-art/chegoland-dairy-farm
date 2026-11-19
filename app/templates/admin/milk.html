@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milk Production | {{ app_name }} Admin</title>
+    <title>Daily Farm Records | {{ app_name }} Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -28,7 +28,7 @@
                 <a href="/admin/products" class="text-gray-700 hover:text-pasture-green text-sm">Products</a>
                 <a href="/admin/orders" class="text-gray-700 hover:text-pasture-green text-sm">Orders</a>
                 <a href="/admin/cows" class="text-gray-700 hover:text-pasture-green text-sm">Cows</a>
-                <a href="/admin/milk" class="text-pasture-green font-bold text-sm">Milk</a>
+                <a href="/admin/milk" class="text-pasture-green font-bold text-sm">Daily Farm Records</a>
                 <a href="/admin/customers" class="text-gray-700 hover:text-pasture-green text-sm">Customers</a>
                 <a href="/admin/reports" class="text-gray-700 hover:text-pasture-green text-sm">Reports</a>
             </div>
@@ -38,12 +38,18 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         <div class="flex justify-between items-end mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Milk Production</h1>
-                <p class="text-gray-600">Record and review daily milk yields per cow</p>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Daily Farm Records</h1>
+                <p class="text-gray-600">Record daily milk yields and shop sales</p>
             </div>
         </div>
 
-        <!-- Daily Milk Recording Form -->
+        <!-- Tabs: Milk Records | Shop Sales -->
+        <div class="flex gap-2 mb-6 border-b border-gray-200">
+            <button onclick="showTab('milk')" id="tab-milk" class="px-6 py-3 bg-pasture-green text-white rounded-t-xl font-medium shadow-soft">Milk Records</button>
+            <button onclick="showTab('shop')" id="tab-shop" class="px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-t-xl font-medium">Shop Sales</button>
+        </div>
+
+        <!-- Milk Records Form -->
         <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100 mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-lg text-gray-800">Record Daily Milk Yield</h3>
@@ -89,6 +95,48 @@
                 </div>
                 <div class="lg:col-span-2">
                     <p id="record-msg" class="mt-2 text-sm"></p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Shop Sales Form -->
+        <div id="panel-shop" class="hidden bg-white p-6 rounded-xl shadow-soft border border-gray-100 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg text-gray-800">Record Shop Sale</h3>
+                <span class="text-xs font-medium text-pasture-green bg-green-50 px-3 py-1 rounded-full">Dairy Shop</span>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Record a product sold from the farm shop.</p>
+            <form id="shop-sale-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                <div class="lg:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Product</label>
+                    <select name="product_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                        <option value="">Select a product</option>
+                        {% for p in products %}
+                        <option value="{{ p.id }}">{{ p.name }} - KES {{ "%.0f"|format(p.price) }} ({{ p.stock_quantity }} {{ p.unit }} in stock)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    <input type="date" name="date" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                    <input type="number" name="quantity" step="0.01" min="0" required value="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Total (KES)</label>
+                    <input type="number" name="total" step="0.01" min="0" required value="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                </div>
+                <div class="lg:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Customer / Notes</label>
+                    <input type="text" name="notes" placeholder="Walk-in customer, phone order..." class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div class="lg:col-span-2">
+                    <button type="submit" class="w-full bg-pasture-green text-white py-3 rounded-lg font-bold hover:bg-green-800">Record Sale</button>
+                </div>
+                <div class="lg:col-span-2">
+                    <p id="shop-msg" class="mt-2 text-sm"></p>
                 </div>
             </form>
         </div>
@@ -156,7 +204,21 @@
     </footer>
     <script>
         // Prefill today's date
-        document.querySelector('input[name="date"]').valueAsDate = new Date();
+        document.querySelectorAll('input[name="date"]').forEach(el => { el.valueAsDate = new Date(); });
+
+        function showTab(tab) {
+            document.getElementById('panel-milk').classList.add('hidden');
+            document.getElementById('panel-shop').classList.add('hidden');
+            document.getElementById('tab-milk').className = "px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-t-xl font-medium";
+            document.getElementById('tab-shop').className = "px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-t-xl font-medium";
+            if (tab === 'milk') {
+                document.getElementById('panel-milk').classList.remove('hidden');
+                document.getElementById('tab-milk').className = "px-6 py-3 bg-pasture-green text-white rounded-t-xl font-medium shadow-soft";
+            } else {
+                document.getElementById('panel-shop').classList.remove('hidden');
+                document.getElementById('tab-shop').className = "px-6 py-3 bg-pasture-green text-white rounded-t-xl font-medium shadow-soft";
+            }
+        }
 
         document.getElementById("milk-record-form").addEventListener("submit", async (e) => {
             e.preventDefault();

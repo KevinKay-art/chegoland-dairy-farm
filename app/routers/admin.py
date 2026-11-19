@@ -91,9 +91,10 @@ async def admin_milk(request: Request, db: Session = Depends(get_db),
                      current_user: User = Depends(require_role(["admin"]))):
     records = db.query(MilkRecord).order_by(MilkRecord.date.desc()).limit(50).all()
     cows = db.query(Cow).all()
+    products = db.query(Product).filter(Product.is_active == True).all()
     return templates.TemplateResponse(request, "admin/milk.html", {
         "request": request, "user": current_user, "app_name": settings.APP_NAME,
-        "records": records, "cows": cows,
+        "records": records, "cows": cows, "products": products,
     })
 
 

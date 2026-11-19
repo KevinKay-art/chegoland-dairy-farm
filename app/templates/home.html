@@ -70,6 +70,9 @@
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="/shop" class="bg-white text-pasture-green px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-50 transition">Shop Fresh Milk</a>
                 <a href="/cows" class="border border-white text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-white/20 transition">Meet Our Zero-Grazing Herd</a>
+                {% if not user or user.role != "admin" %}
+                <a href="/login" class="border border-white text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-white/20 transition">Farm Admin Login</a>
+                {% endif %}
             </div>
         </div>
     </section>
@@ -93,6 +96,36 @@
                 <div class="bg-cream p-6 rounded-xl text-center">
                     <div class="text-pasture-green font-bold text-3xl">5</div>
                     <div class="text-sm text-gray-600">Years Farming</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zero-Grazing Herd Background -->
+    <section class="relative overflow-hidden bg-pasture-green py-20 lg:py-32 text-white">
+        <img src="https://images.unsplash.com/photo-1544367567-0f22b20034e1?q=80&w=1600&auto=format&fit=crop" alt="Cows grazing in the zero-grazing unit" class="absolute inset-0 w-full h-full object-cover -z-10 opacity-70">
+        <div class="absolute inset-0 -z-10 bg-green-900/40"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-3xl lg:text-4xl font-bold mb-6">Our Zero-Grazing Herd</h2>
+            <p class="text-lg text-green-100 mb-10 max-w-2xl mx-auto">
+                Healthy cows in zero-grazing stalls at Kapcholyo, Kaplong and its environs — milked morning and evening for fresh daily dairy.
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 justify-center max-w-4xl mx-auto">
+                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl border border-white/30">
+                    <div class="text-green-100 font-bold text-sm mb-1">Friesian</div>
+                    <div class="text-white text-xs">High yield, black &amp; white</div>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl border border-white/30">
+                    <div class="text-green-100 font-bold text-sm mb-1">Ayrshire</div>
+                    <div class="text-white text-xs">Hardy, excellent milk</div>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl border border-white/30">
+                    <div class="text-green-100 font-bold text-sm mb-1">Jersey</div>
+                    <div class="text-white text-xs">Rich, creamy milk</div>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl border border-white/30">
+                    <div class="text-green-100 font-bold text-sm mb-1">Guernsey</div>
+                    <div class="text-white text-xs">Golden milk color</div>
                 </div>
             </div>
         </div>
