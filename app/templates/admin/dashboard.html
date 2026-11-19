@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | {{ app_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: #2E7D32; }
+        .text-pasture-green { color: #2E7D32; }
+        .bg-cream { background-color: #FFF8E7; }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
+                <span class="font-poppins font-bold text-xl text-pasture-green"> {{ app_name }} Admin</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="/" class="text-gray-700 hover:text-pasture-green text-sm">View Store</a>
+                <a href="/admin/products" class="text-gray-700 hover:text-pasture-green text-sm">Products</a>
+                <a href="/admin/orders" class="text-gray-700 hover:text-pasture-green text-sm">Orders</a>
+                <a href="/admin/cows" class="text-gray-700 hover:text-pasture-green text-sm">Cows</a>
+                <a href="/admin/milk" class="text-gray-700 hover:text-pasture-green text-sm">Milk</a>
+                <a href="/admin/customers" class="text-gray-700 hover:text-pasture-green text-sm">Customers</a>
+                <a href="/admin/reports" class="text-gray-700 hover:text-pasture-green text-sm">Reports</a>
+            </div>
+            <a href="/logout" class="text-gray-500 hover:text-red-500 text-sm">Logout</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard Overview</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <div class="text-gray-600 text-sm mb-1">Today's Sales</div>
+                <div class="text-2xl font-bold text-pasture-green">KES {{ "%.0f"|format(today_sales) }}</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <div class="text-gray-600 text-sm mb-1">Monthly Revenue</div>
+                <div class="text-2xl font-bold text-pasture-green">KES {{ "%.0f"|format(monthly_revenue) }}</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <div class="text-gray-600 text-sm mb-1">Pending Orders</div>
+                <div class="text-2xl font-bold text-amber-600">{{ pending_orders }}</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <div class="text-gray-600 text-sm mb-1">Total Cows</div>
+                <div class="text-2xl font-bold text-gray-800">{{ total_cows }}</div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <h3 class="font-bold text-lg mb-4">Production Trend</h3>
+                <canvas id="productionChart" width="400" height="200"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <h3 class="font-bold text-lg mb-4">Top Products</h3>
+                <canvas id="topProductsChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+            <h3 class="font-bold text-lg mb-4">Low Stock Alerts</h3>
+            {% if low_stock %}
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-gray-200">
+                        <th class="px-6 py-3 text-gray-800 font-bold">Product</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Stock</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in low_stock %}
+                    <tr class="border-b border-gray-100">
+                        <td class="px-6 py-3 text-gray-800">{{ p.name }}</td>
+                        <td class="px-6 py-3 text-amber-600 font-bold">{{ p.stock_quantity }}</td>
+                        <td class="px-6 py-3 text-gray-600">{{ p.unit }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-gray-600">No low stock alerts.</p>
+            {% endif %}
+        </div>
+    </div>
+    <footer class="bg-pasture-green text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }} &bull; Kapcholyo, Kaplong &amp; its environs</p>
+        </div>
+    </footer>
+    <script>
+        const productionData = {{ production | tojson }};
+        new Chart(document.getElementById("productionChart"), {
+            type: "line",
+            data: { labels: productionData.map(d => d.date), datasets: [{label: "Litres", data: productionData.map(d => d.litres), borderColor: "#2E7D32", fill: false, tension: 0.3}] },
+            options: {responsive: true, plugins: {legend: {display: false}}}
+        });
+        const topData = {{ top_products | tojson }};
+        new Chart(document.getElementById("topProductsChart"), {
+            type: "bar",
+            data: { labels: topData.map(d => d.product_name), datasets: [{label: "Quantity", data: topData.map(d => d.total_quantity), backgroundColor: "#2E7D32"}] },
+            options: {responsive: true, plugins: {legend: {display: false}}}
+        });
+    </script>
+</body>
+</html>

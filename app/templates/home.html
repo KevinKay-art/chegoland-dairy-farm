@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | {{ app_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: #2E7D32; }
+        .text-pasture-green { color: #2E7D32; }
+        .border-pasture-green { border-color: #2E7D32; }
+        .bg-cream { background-color: #FFF8E7; }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
+                    <span class="font-poppins font-bold text-xl text-pasture-green tracking-tight">{{ app_name }}</span>
+                </div>
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/" class="text-pasture-green font-bold">Home</a>
+                    <a href="/shop" class="text-gray-700 font-medium hover:text-pasture-green">Shop</a>
+                    <a href="/cows" class="text-gray-700 font-medium hover:text-pasture-green">Our Cows</a>
+                    <a href="/about" class="text-gray-700 font-medium hover:text-pasture-green">About</a>
+                    <a href="/contact" class="text-gray-700 font-medium hover:text-pasture-green">Contact</a>
+                    {% if user and user.role == "admin" %}
+                    <a href="/admin" class="text-pasture-green font-bold underline">Admin Dashboard</a>
+                    {% endif %}
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="/cart" class="relative text-gray-700 hover:text-pasture-green">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 110 4 2 2 0 010-4z"></path></svg>
+                        {% if cart_count > 0 %}
+                        <span class="absolute -top-1 -right-1 bg-pasture-green text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">{{ cart_count }}</span>
+                        {% endif %}
+                    </a>
+                    {% if user %}
+                        <a href="/account" class="text-gray-700 hover:text-pasture-green text-sm">{{ user.full_name }}</a>
+                        <form action="/logout" method="POST" style="display:inline;"><button class="text-gray-500 hover:text-red-500 text-sm">Logout</button></form>
+                    {% else %}
+                        <a href="/login" class="bg-pasture-green text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-800">Login</a>
+                        <a href="/register" class="border border-pasture-green text-pasture-green px-4 py-2 rounded-lg text-sm font-medium hover:bg-pasture-green hover:text-white">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative overflow-hidden bg-pasture-green text-white py-20 lg:py-32">
+        <img src="https://images.unsplash.com/photo-1519044992447-2ef9b959a0c7?q=80&w=1400&auto=format&fit=crop" alt="Cows in zero-grazing stalls at the dairy unit" class="absolute inset-0 w-full h-full object-cover -z-10 opacity-65">
+        <div class="absolute inset-0 -z-10 bg-black/20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="bg-white/10 backdrop-blur-sm inline-block px-4 py-1.5 rounded-full text-xs font-bold tracking-wider text-green-200 mb-4 border border-white/20">
+                Zero-Grazing Dairy Unit &bull; Kapcholyo, Kaplong &amp; its environs
+            </div>
+            <h1 class="text-4xl lg:text-6xl font-bold mb-4">Fresh Milk from {{ app_name }}</h1>
+            <p class="text-lg lg:text-xl text-green-100 mb-8 max-w-2xl mx-auto">
+                Our herd is kept in zero-grazing units and milked hygienically twice daily — morning and evening — delivering fresh, nutritious milk straight to your door in Kapcholyo, Kaplong and its environs.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/shop" class="bg-white text-pasture-green px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-50 transition">Shop Fresh Milk</a>
+                <a href="/cows" class="border border-white text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-white/20 transition">Meet Our Zero-Grazing Herd</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Stats -->
+    <section class="bg-white py-10 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-cream p-6 rounded-xl text-center">
+                    <div class="text-pasture-green font-bold text-3xl">{{ total_cows }}</div>
+                    <div class="text-sm text-gray-600">Happy Cows</div>
+                </div>
+                <div class="bg-cream p-6 rounded-xl text-center">
+                    <div class="text-pasture-green font-bold text-3xl">{{ "%.0f"|format(monthly_production) }}L</div>
+                    <div class="text-sm text-gray-600">Produced This Month</div>
+                </div>
+                <div class="bg-cream p-6 rounded-xl text-center">
+                    <div class="text-pasture-green font-bold text-3xl">{{ total_customers }}</div>
+                    <div class="text-sm text-gray-600">Happy Customers</div>
+                </div>
+                <div class="bg-cream p-6 rounded-xl text-center">
+                    <div class="text-pasture-green font-bold text-3xl">5</div>
+                    <div class="text-sm text-gray-600">Years Farming</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meet Our Cows -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Meet Our Cows</h2>
+                    <p class="text-gray-600">Our zero-grazing herd produces the finest milk</p>
+                </div>
+                <a href="/cows" class="text-pasture-green font-semibold hover:underline">View all cows &rarr;</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for cow in cows %}
+                <a href="/cows/{{ cow.id }}" class="block bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-md transition border border-gray-100">
+                    <img src="{{ cow.photo_url or 'https://images.unsplash.com/photo-1590588292422-8399e897c50b?w=400&auto=format&fit=crop' }}" alt="{{ cow.name }}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-gray-800">{{ cow.name }}</h3>
+                        <p class="text-pasture-green font-semibold text-sm">{{ cow.breed }}</p>
+                        <p class="text-gray-500 text-sm mt-1">{{ "%.1f"|format(cow.daily_avg_yield) }} L / day avg</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-16 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Fresh From The Farm</h2>
+                    <p class="text-gray-600">Our finest dairy products, ready for your table</p>
+                </div>
+                <a href="/shop" class="text-pasture-green font-semibold hover:underline">Browse all products &rarr;</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for product in featured %}
+                <div class="bg-white rounded-xl overflow-hidden shadow-soft border border-gray-100">
+                    <img src="{{ product.image_url or 'https://images.unsplash.com/photo-1564947779-46498e5a2a8c?w=400&auto=format&fit=crop' }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">{{ product.name }}</h3>
+                        <p class="text-gray-600 text-sm mb-3">{{ product.description or 'Farm fresh product' }}</p>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xl font-bold text-pasture-green">KES {{ "%.0f"|format(product.price) }} / {{ product.unit }}</span>
+                            <span class="text-xs font-bold {% if product.stock_quantity > 10 %}text-green-600{% else %}text-amber-600{% endif %} px-2 py-1 rounded bg-gray-100">
+                                {{ product.stock_quantity }} in stock
+                            </span>
+                        </div>
+                        <button onclick="addToCart('{{ product.id }}', '{{ product.name }}', {{ product.price }}, '{{ product.unit }}')" class="w-full bg-pasture-green text-white py-2 rounded-lg font-bold hover:bg-green-800 transition">Add to Cart</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="w-12 h-12 bg-pasture-green/20 text-pasture-green rounded-lg flex items-center justify-center mx-auto mb-4 text-xl">&#10004;</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Fresh Daily</h4>
+                    <p class="text-sm text-gray-600">Milk delivered within hours of milking</p>
+                </div>
+                <div>
+                    <div class="w-12 h-12 bg-pasture-green/20 text-pasture-green rounded-lg flex items-center justify-center mx-auto mb-4 text-xl">&#10004;</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Hygienic</h4>
+                    <p class="text-sm text-gray-600">Strict cleanliness standards maintained</p>
+                </div>
+                <div>
+                    <div class="w-12 h-12 bg-pasture-green/20 text-pasture-green rounded-lg flex items-center justify-center mx-auto mb-4 text-xl">&#10004;</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Door Delivery</h4>
+                    <p class="text-sm text-gray-600">Fresh milk delivered to your doorstep</p>
+                </div>
+                <div>
+                    <div class="w-12 h-12 bg-pasture-green/20 text-pasture-green rounded-lg flex items-center justify-center mx-auto mb-4 text-xl">&#10004;</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Farm Direct</h4>
+                    <p class="text-sm text-gray-600">No middlemen, straight from our farm</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">What Our Customers Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-white p-8 rounded-xl shadow-soft border border-gray-100">
+                    <p class="text-gray-600 italic mb-4">"The freshest milk I've ever tasted. Delivered to my door every morning!"</p>
+                    <p class="font-bold text-gray-800">— Mama Wanjiku, Nairobi</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-soft border border-gray-100">
+                    <p class="text-gray-600 italic mb-4">"Chegoland's mala is the best in town. My kids love it."</p>
+                    <p class="font-bold text-gray-800">— John Kamau, Kiambu</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-soft border border-gray-100">
+                    <p class="text-gray-600 italic mb-4">"Reliable, hygienic, and farm-direct. I won't buy milk anywhere else."</p>
+                    <p class="font-bold text-gray-800">— Sarah Njeri, Nakuru</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Delivery Area -->
+    <section class="py-16 bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-pasture-green rounded-xl p-8 md:p-12 text-white">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 rounded flex items-center justify-center mx-auto mb-4 text-xl">🚚</div>
+                        <h3 class="font-bold text-lg mb-2">Free Delivery</h3>
+                        <p class="text-green-100 text-sm">On orders above KES 1,000 within Nairobi</p>
+                    </div>
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 rounded flex items-center justify-center mx-auto mb-4 text-xl">🕒</div>
+                        <h3 class="font-bold text-lg mb-2">Flexible Slots</h3>
+                        <p class="text-green-100 text-sm">Choose your delivery date and time</p>
+                    </div>
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 rounded flex items-center justify-center mx-auto mb-4 text-xl">📍</div>
+                        <h3 class="font-bold text-lg mb-2">Delivery Areas</h3>
+                        <p class="text-green-100 text-sm">Nairobi, Kiambu, Nakuru & surrounding towns</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-pasture-green text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <span class="font-poppins font-bold text-xl text-pasture-green block mb-2">{{ app_name }}</span>
+                    <p class="text-green-200 text-sm">Fresh dairy from our zero-grazing herd &bull; Kapcholyo, Kaplong &amp; its environs</p>
+                </div>
+                <div>
+                    <h4 class="font-poppins font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-green-200">
+                        <li><a href="/shop" class="hover:text-white">Shop</a></li>
+                        <li><a href="/cows" class="hover:text-white">Our Cows</a></li>
+                        <li><a href="/about" class="hover:text-white">About</a></li>
+                        <li><a href="/contact" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-poppins font-semibold mb-4">Contact</h4>
+                    <p class="text-sm text-green-200">WhatsApp: <a href="https://wa.me/254700000000" class="hover:text-white">+254 700 000 000</a></p>
+                </div>
+                <div>
+                    <h4 class="font-poppins font-semibold mb-4">Newsletter</h4>
+                    <form class="flex gap-2">
+                        <input type="email" placeholder="Your email" class="flex-1 px-3 py-2 rounded text-gray-800 text-sm">
+                        <button class="bg-white text-pasture-green px-4 py-2 rounded text-sm font-bold">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-green-500/30 pt-8 text-center text-green-200 text-sm">&copy; 2026 {{ app_name }} &bull; Kapcholyo, Kaplong &amp; its environs</div>
+        </div>
+    </footer>
+
+    <script>
+        function addToCart(productId, name, price, unit) {
+            fetch('/api/v1/cart/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({product_id: productId, quantity: 1})
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    alert(name + ' added to cart!');
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

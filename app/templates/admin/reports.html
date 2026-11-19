@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | {{ app_name }} Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: #2E7D32; }
+        .text-pasture-green { color: #2E7D32; }
+        .bg-cream { background-color: #FFF8E7; }
+        .shadow-soft { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
+                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }} Admin</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="/" class="text-gray-700 hover:text-pasture-green text-sm">View Store</a>
+                <a href="/admin" class="text-gray-700 hover:text-pasture-green text-sm">Dashboard</a>
+                <a href="/admin/products" class="text-gray-700 hover:text-pasture-green text-sm">Products</a>
+                <a href="/admin/orders" class="text-gray-700 hover:text-pasture-green text-sm">Orders</a>
+                <a href="/admin/cows" class="text-gray-700 hover:text-pasture-green text-sm">Cows</a>
+                <a href="/admin/milk" class="text-gray-700 hover:text-pasture-green text-sm">Milk</a>
+                <a href="/admin/customers" class="text-gray-700 hover:text-pasture-green text-sm">Customers</a>
+                <a href="/admin/reports" class="text-pasture-green font-bold text-sm">Reports</a>
+            </div>
+            <a href="/logout" class="text-gray-500 hover:text-red-500 text-sm">Logout</a>
+        </div>
+    </nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Reports &amp; Exports</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <h3 class="font-bold text-lg mb-4">Sales Report</h3>
+                <p class="text-gray-600 text-sm mb-4">Export sales orders within a date range to CSV.</p>
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="date" id="startDate" class="px-3 py-2 border border-gray-300 rounded">
+                    <input type="date" id="endDate" class="px-3 py-2 border border-gray-300 rounded">
+                    <button onclick="exportCsv('sales')" class="col-span-2 bg-pasture-green text-white px-6 py-2 rounded-lg font-bold hover:bg-green-800">Export Sales CSV</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <h3 class="font-bold text-lg mb-4">Production Report</h3>
+                <p class="text-gray-600 text-sm mb-4">Export milk production records within a date range to CSV.</p>
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="date" id="prodStartDate" class="px-3 py-2 border border-gray-300 rounded">
+                    <input type="date" id="prodEndDate" class="px-3 py-2 border border-gray-300 rounded">
+                    <button onclick="exportCsv('production')" class="col-span-2 bg-pasture-green text-white px-6 py-2 rounded-lg font-bold hover:bg-green-800">Export Production CSV</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+            <h3 class="font-bold text-lg mb-4">Quick Actions</h3>
+            <div class="space-y-2">
+                <a href="/admin/invoice/0" class="block px-4 py-3 border border-gray-200 rounded hover:bg-gray-50 text-pasture-green hover:underline">View a sample invoice</a>
+                <a href="/admin/orders" class="block px-4 py-3 border border-gray-200 rounded hover:bg-gray-50 text-gray-700 hover:bg-gray-50">Manage Orders</a>
+                <a href="/admin/products" class="block px-4 py-3 border border-gray-200 rounded hover:bg-gray-50 text-gray-700 hover:bg-gray-50">Manage Products</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-pasture-green text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }}</p>
+        </div>
+    </footer>
+
+    <script>
+        function exportCsv(kind) {
+            const start = document.getElementById(kind === 'sales' ? 'startDate' : 'prodStartDate').value;
+            const end = document.getElementById(kind === 'sales' ? 'endDate' : 'prodEndDate').value;
+            if (!start || !end) { alert('Please select both dates'); return; }
+            window.location = '/api/v1/admin/reports/' + kind + '/csv?start_date=' + start + '&end_date=' + end;
+        }
+    </script>
+</body>
+</html>
+

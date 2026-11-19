@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: chegoland-dairy
+    env: python
+    buildCommand: "pip install -r requirements.txt && alembic upgrade head && python scripts/seed.py"
+    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker -w 4 -b 0.0.0.0:$PORT app.main:app"
+    envVars:
+      - key: DATABASE_URL
+        sync: true
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MPESA_MOCK_MODE
+        value: "true"
+      - key: ADMIN_EMAIL
+        value: admin@chegoland.com
+      - key: ADMIN_PASSWORD
+        value: Admin123!
+    disk:
+      name: data
+      mountPath: /app/data
+      sizeGB: 1
+
+databases:
+  - name: chegoland-dairy-db
+    plan: free
+    ipAllowList: []

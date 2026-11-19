@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriptions | {{ app_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: #2E7D32; }
+        .text-pasture-green { color: #2E7D32; }
+        .bg-cream { background-color: #FFF8E7; }
+        .shadow-soft { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
+                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }}</span>
+            </div>
+            <a href="/" class="text-gray-700 hover:text-pasture-green">Home</a>
+            <a href="/account" class="text-pasture-green font-bold">My Account</a>
+        </div>
+    </nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Delivery Subscriptions</h1>
+                <p class="text-gray-600">Set up recurring milk delivery (daily or weekly)</p>
+            </div>
+        </div>
+
+        {% if created %}<div class="bg-green-50 text-green-700 p-4 rounded mb-4">Subscription created!</div>{% endif %}
+
+        <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100 mb-8">
+            <h3 class="font-bold text-lg mb-4">Start a New Subscription</h3>
+            <form method="POST" action="/account/subscriptions" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="flex flex-col gap-1"><label class="text-sm font-medium text-gray-700">Product</label><select name="product_id" class="px-3 py-2 border border-gray-300 rounded" required>{% for p in products %}<option value="{{ p.id }}">{{ p.name }} ({{ p.unit }})</option>{% endfor %}</select></div>
+                <div class="flex flex-col gap-1"><label class="text-sm font-medium text-gray-700">Qty</label><input type="number" name="quantity" value="1" min="1" class="px-3 py-2 border border-gray-300 rounded" required></div>
+                <div class="flex flex-col gap-1"><label class="text-sm font-medium text-gray-700">Frequency</label><select name="frequency" class="px-3 py-2 border border-gray-300 rounded"><option value="daily">Daily</option><option value="weekly">Weekly</option></select></div>
+                <div class="flex flex-col gap-1"><label class="text-sm font-medium text-gray-700">Start Date</label><input type="date" name="start_date" class="px-3 py-2 border border-gray-300 rounded" required></div>
+                <div class="flex flex-col gap-1"><label class="text-sm font-medium text-gray-700">End Date (optional)</label><input type="date" name="end_date" class="px-3 py-2 border border-gray-300 rounded"></div>
+                <div class="flex flex-col gap-1"><label class="text-sm font-medium text-gray-700">Notes</label><input name="notes" placeholder="e.g. leave at gate" class="px-3 py-2 border border-gray-300 rounded"></div>
+                <div class="col-span-4"><button type="submit" class="bg-pasture-green text-white px-6 py-2 rounded-lg font-bold hover:bg-green-800">Start Subscription</button></div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-soft border border-gray-100 overflow-hidden">
+            <h3 class="font-bold text-lg px-6 py-4 border-b border-gray-100">Your Subscriptions</h3>
+            {% if subscriptions %}
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                        <th class="px-6 py-3 text-gray-800 font-bold">Product</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Qty</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Frequency</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Starts</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Status</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in subscriptions %}
+                    <tr class="border-b border-gray-100">
+                        <td class="px-6 py-3">{{ s.product.name if s.product else s.product_id }}</td>
+                        <td class="px-6 py-3">{{ s.quantity }}</td>
+                        <td class="px-6 py-3">{{ s.frequency }}</td>
+                        <td class="px-6 py-3 text-sm">{{ s.start_date }}</td>
+                        <td class="px-6 py-3"><span class="inline-block px-2 py-1 rounded text-xs font-medium {% if s.is_active %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}">{{ 'Active' if s.is_active else 'Paused' }}</span></td>
+                        <td class="px-6 py-3">
+                            <form method="POST" action="/account/subscriptions/{{ s.id }}/toggle" style="display:inline;" onsubmit="return confirm('{{ 'Pause' if s.is_active else 'Activate' }} this subscription?')">
+                                <button type="submit" class="text-xs px-3 py-1 border rounded {% if s.is_active %}text-red-600 border-red-200{% else %}text-green-600 border-green-200{% endif %}">{{ 'Pause' if s.is_active else 'Activate' }}</button>
+                            </form>
+                            <form method="POST" action="/account/subscriptions/{{ s.id }}/delete" style="display:inline; margin-left:4px;" onsubmit="return confirm('Delete this subscription?')">
+                                <button type="submit" class="text-xs px-3 py-1 text-red-600 hover:underline">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="px-6 py-8 text-center text-gray-600">No active subscriptions. Create one above!</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer class="bg-pasture-green text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }}</p>
+        </div>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | {{ app_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: #2E7D32; }
+        .text-pasture-green { color: #2E7D32; }
+        .bg-cream { background-color: #FFF8E7; }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
+                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }}</span>
+            </div>
+            <a href="/" class="text-gray-700 hover:text-pasture-green">Home</a>
+        </div>
+    </nav>
+
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1">
+        <div class="text-center py-12">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Order Confirmed!</h1>
+            <p class="text-gray-600">Thank you for your order from {{ app_name }}</p>
+        </div>
+        <div class="bg-white p-8 rounded-xl shadow-soft border border-gray-100 mt-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Order #{{ order.order_number }}</h2>
+            <p class="text-gray-600 mb-4">Total: <span class="font-bold text-pasture-green">KES {{ "%.0f"|format(order.total_amount) }}</span></p>
+            <p class="text-gray-600 mb-4">Status: <span class="font-bold">{{ order.order_status }}</span></p>
+            <p class="text-gray-600 mb-4">Payment: <span class="font-bold">{{ order.payment_status }}</span></p>
+            {% if order.payment_method == 'mpesa' and order.payment_status != 'paid' %}
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg mb-6">
+                <p class="text-amber-800 text-sm mb-2">Please complete your M-Pesa payment when prompted on your phone.</p>
+            </div>
+            {% endif %}
+            <a href="/order/{{ order.order_number }}" class="bg-pasture-green text-white px-6 py-3 rounded-lg font-bold hover:bg-green-800 inline-block">Track Order</a>
+            <a href="/" class="text-pasture-green font-semibold ml-4 hover:underline">Continue Shopping</a>
+        </div>
+    </div>
+
+    <footer class="bg-pasture-green text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }}</p>
+        </div>
+    </footer>
+</body>
+</html>

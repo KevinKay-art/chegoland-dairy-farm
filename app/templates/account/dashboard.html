@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account | {{ app_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: #2E7D32; }
+        .text-pasture-green { color: #2E7D32; }
+        .bg-cream { background-color: #FFF8E7; }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
+                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }}</span>
+            </div>
+            <a href="/" class="text-gray-700 hover:text-pasture-green">Home</a>
+            <a href="/account" class="text-pasture-green font-bold">My Account</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">My Account</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <h2 class="font-bold text-lg mb-4">Profile</h2>
+                <p class="text-gray-600 mb-2"><strong>Name:</strong> {{ user.full_name }}</p>
+                <p class="text-gray-600 mb-2"><strong>Email:</strong> {{ user.email }}</p>
+                <p class="text-gray-600 mb-2"><strong>Phone:</strong> {{ user.phone or 'Not provided' }}</p>
+                <p class="text-gray-600 mb-2"><strong>Role:</strong> {{ user.role }}</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <h2 class="font-bold text-lg mb-4">Address</h2>
+                <p class="text-gray-600 mb-2">{{ user.address or 'Not provided' }}</p>
+                <p class="text-gray-600 mb-2">{{ user.city or 'Not provided' }}</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+                <h2 class="font-bold text-lg mb-4">Quick Actions</h2>
+                <a href="/shop" class="block w-full bg-pasture-green text-white py-2 rounded-lg text-center font-bold mb-2 hover:bg-green-800">Shop Products</a>
+                <a href="/cart" class="block w-full border border-pasture-green text-pasture-green py-2 rounded-lg text-center font-bold mb-2 hover:bg-pasture-green hover:text-white">View Cart</a>
+                <a href="/account/subscriptions" class="block w-full border border-pasture-green text-pasture-green py-2 rounded-lg text-center font-bold mb-2 hover:bg-pasture-green hover:text-white">Manage Subscriptions</a>
+
+                <a href="/contact" class="block w-full border border-gray-300 text-gray-700 py-2 rounded-lg text-center font-bold hover:bg-gray-50">Contact Us</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-pasture-green text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }}</p>
+        </div>
+    </footer>
+</body>
+</html>

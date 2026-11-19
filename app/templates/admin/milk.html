@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Production | {{ app_name }} Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: #2E7D32; }
+        .text-pasture-green { color: #2E7D32; }
+        .bg-cream { background-color: #FFF8E7; }
+        .shadow-soft { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
+                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }} Admin</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="/" class="text-gray-700 hover:text-pasture-green text-sm">View Store</a>
+                <a href="/admin" class="text-gray-700 hover:text-pasture-green text-sm">Dashboard</a>
+                <a href="/admin/products" class="text-gray-700 hover:text-pasture-green text-sm">Products</a>
+                <a href="/admin/orders" class="text-gray-700 hover:text-pasture-green text-sm">Orders</a>
+                <a href="/admin/cows" class="text-gray-700 hover:text-pasture-green text-sm">Cows</a>
+                <a href="/admin/milk" class="text-pasture-green font-bold text-sm">Milk</a>
+                <a href="/admin/customers" class="text-gray-700 hover:text-pasture-green text-sm">Customers</a>
+                <a href="/admin/reports" class="text-gray-700 hover:text-pasture-green text-sm">Reports</a>
+            </div>
+            <a href="/logout" class="text-gray-500 hover:text-red-500 text-sm">Logout</a>
+        </div>
+    </nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+        <div class="flex justify-between items-end mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Milk Production</h1>
+                <p class="text-gray-600">Record and review daily milk yields per cow</p>
+            </div>
+        </div>
+
+        <!-- Daily Milk Recording Form -->
+        <div class="bg-white p-6 rounded-xl shadow-soft border border-gray-100 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg text-gray-800">Record Daily Milk Yield</h3>
+                <span class="text-xs font-medium text-pasture-green bg-green-50 px-3 py-1 rounded-full">Morning &amp; Evening</span>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Enter the litres produced by each cow, twice daily.</p>
+            <form id="milk-record-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                <div class="lg:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cow</label>
+                    <select name="cow_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                        <option value="">Select a cow</option>
+                        {% for c in cows %}
+                        <option value="{{ c.id }}">{{ c.name }} ({{ c.tag_number }}) - {{ c.breed }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    <input type="date" name="date" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Morning (Litres)</label>
+                    <input type="number" name="morning" step="0.01" min="0" required value="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Evening (Litres)</label>
+                    <input type="number" name="evening" step="0.01" min="0" required value="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Used by Calves (L)</label>
+                    <input type="number" name="used_by_calves" step="0.01" min="0" value="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Spoiled (L)</label>
+                    <input type="number" name="spoiled" step="0.01" min="0" value="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div class="lg:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                    <textarea name="notes" rows="2" placeholder="e.g. on heat, treated with..." class="w-full px-3 py-2 border border-gray-300 rounded-lg"></textarea>
+                </div>
+                <div class="lg:col-span-2">
+                    <button type="submit" class="w-full bg-pasture-green text-white py-3 rounded-lg font-bold hover:bg-green-800">Record Yield</button>
+                </div>
+                <div class="lg:col-span-2">
+                    <p id="record-msg" class="mt-2 text-sm"></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-soft border border-gray-100 overflow-hidden">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                        <th class="px-6 py-3 text-gray-800 font-bold">Date</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Cow</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Session</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Yield (L)</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Calves (L)</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Spoiled (L)</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">For Sale (L)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in records %}
+                    <tr class="border-b border-gray-100">
+                        <td class="px-6 py-3">{{ r.date }}</td>
+                        <td class="px-6 py-3 font-mono text-sm">{{ r.cow_id }}</td>
+                        <td class="px-6 py-3">{{ r.session }}</td>
+                        <td class="px-6 py-3">{{ r.yield_litres }}</td>
+                        <td class="px-6 py-3">{{ r.used_by_calves }}</td>
+                        <td class="px-6 py-3">{{ r.spoiled }}</td>
+                        <td class="px-6 py-3 font-medium text-pasture-green">{{ r.available_for_sale }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="px-6 py-8 text-center text-gray-600">No milk records found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-8 bg-white p-6 rounded-xl shadow-soft border border-gray-100">
+            <h3 class="font-bold text-lg mb-4">All Cows</h3>
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                        <th class="px-6 py-3 text-gray-800 font-bold">Cow</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Breed</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Status</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold">Avg Yield</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in cows %}
+                    <tr class="border-b border-gray-100">
+                        <td class="px-6 py-3">{{ c.name }} ({{ c.tag_number }})</td>
+                        <td class="px-6 py-3 text-gray-600 text-sm">{{ c.breed }}</td>
+                        <td class="px-6 py-3">{{ c.status }}</td>
+                        <td class="px-6 py-3">{{ "%.1f"|format(c.daily_avg_yield) }} L</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="bg-pasture-green text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }} &bull; Kapcholyo, Kaplong &amp; its environs</p>
+        </div>
+    </footer>
+    <script>
+        // Prefill today's date
+        document.querySelector('input[name="date"]').valueAsDate = new Date();
+
+        document.getElementById("milk-record-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const data = new FormData(form);
+            const cowId = data.get("cow_id");
+            const date = data.get("date");
+            const morning = parseFloat(data.get("morning")) || 0;
+            const evening = parseFloat(data.get("evening")) || 0;
+            const usedByCalves = parseFloat(data.get("used_by_calves")) || 0;
+            const spoiled = parseFloat(data.get("spoiled")) || 0;
+            const notes = data.get("notes") || "";
+            const msg = document.getElementById("record-msg");
+            msg.textContent = "Recording morning and evening yields...";
+            try {
+                for (const session of ["morning", "evening"]) {
+                    const yieldLitres = session === "morning" ? morning : evening;
+                    const res = await fetch("/api/v1/milk", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams({
+                            cow_id: cowId,
+                            date: date,
+                            session: session,
+                            yield_litres: yieldLitres,
+                            used_by_calves: usedByCalves,
+                            spoiled: spoiled,
+                            notes: notes,
+                        }),
+                    });
+                    if (!res.ok) throw new Error("Failed to record " + session + " yield");
+                }
+                msg.className = "mt-2 text-sm text-green-700 font-medium";
+                msg.textContent = "Saved: morning and evening milk yields recorded.";
+                form.reset();
+                document.querySelector('input[name="date"]').valueAsDate = new Date();
+                setTimeout(() => location.reload(), 1200);
+            } catch (err) {
+                msg.className = "mt-2 text-sm text-red-700 font-medium";
+                msg.textContent = "Recording failed. Please try again.";
+            }
+        });
+    </script>
+</body>
+</html>
+

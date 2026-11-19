@@ -1,0 +1,227 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- c:\Users\ADMIN\Documents\chegoland\dairy-farm-app\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: c:\Users\ADMIN\Documents\chegoland\dairy-farm-app
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collecting ... collected 26 items
+
+tests/test_admin.py::test_admin_dashboard_access FAILED                  [  3%]
+tests/test_admin.py::test_admin_stats_api PASSED                         [  7%]
+tests/test_admin.py::test_admin_products_api PASSED                      [ 11%]
+tests/test_admin.py::test_admin_access_denied_without_token PASSED       [ 15%]
+tests/test_admin.py::test_admin_cows_api PASSED                          [ 19%]
+tests/test_admin.py::test_admin_milk_api PASSED                          [ 23%]
+tests/test_auth.py::test_authenticate_user PASSED                        [ 26%]
+tests/test_auth.py::test_api_login PASSED                                [ 30%]
+tests/test_auth.py::test_api_login_wrong_password PASSED                 [ 34%]
+tests/test_auth.py::test_api_register PASSED                             [ 38%]
+tests/test_auth.py::test_api_register_duplicate PASSED                   [ 42%]
+tests/test_auth.py::test_api_me PASSED                                   [ 46%]
+tests/test_cart.py::test_add_to_cart PASSED                              [ 50%]
+tests/test_cart.py::test_get_cart PASSED                                 [ 53%]
+tests/test_cart.py::test_update_cart PASSED                              [ 57%]
+tests/test_cart.py::test_remove_from_cart FAILED                         [ 61%]
+tests/test_mpesa.py::test_mpesa_stk_push_mock PASSED                     [ 65%]
+tests/test_mpesa.py::test_mpesa_callback_success PASSED                  [ 69%]
+tests/test_orders.py::test_create_order PASSED                           [ 73%]
+tests/test_orders.py::test_create_order_insufficient_stock PASSED        [ 76%]
+tests/test_orders.py::test_list_orders PASSED                            [ 80%]
+tests/test_orders.py::test_get_order PASSED                              [ 84%]
+tests/test_products.py::test_list_products PASSED                        [ 88%]
+tests/test_products.py::test_create_product PASSED                       [ 92%]
+tests/test_products.py::test_create_product_unauthorized PASSED          [ 96%]
+tests/test_products.py::test_get_product PASSED                          [100%]
+
+================================== FAILURES ===================================
+_________________________ test_admin_dashboard_access _________________________
+venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\starlette\middleware\sessions.py:92: in __call__
+    await self.app(scope, receive, send_wrapper)
+venv\Lib\site-packages\starlette\middleware\trustedhost.py:37: in __call__
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\starlette\routing.py:683: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv\Lib\site-packages\fastapi\routing.py:2811: in app
+    await route.handle(scope, receive, send)
+venv\Lib\site-packages\fastapi\routing.py:1839: in handle
+    await self.original_router.handle(scope, receive, send)
+venv\Lib\site-packages\fastapi\routing.py:2894: in handle
+    await included_router._handle_selected(scope, receive, send)
+venv\Lib\site-packages\fastapi\routing.py:1865: in _handle_selected
+    await original_route.handle(scope, receive, send)
+venv\Lib\site-packages\fastapi\routing.py:1328: in handle
+    await effective_context.app(scope, receive, send)
+venv\Lib\site-packages\fastapi\routing.py:166: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+venv\Lib\site-packages\fastapi\routing.py:152: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\fastapi\routing.py:745: in app
+    raw_response = await run_endpoint_function(
+venv\Lib\site-packages\fastapi\routing.py:372: in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\routers\admin.py:48: in admin_dashboard
+    return templates.TemplateResponse("admin/dashboard.html", {
+venv\Lib\site-packages\starlette\templating.py:148: in TemplateResponse
+    template = self.get_template(name)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\starlette\templating.py:115: in get_template
+    return self.env.get_template(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\environment.py:1016: in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\environment.py:975: in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\loaders.py:126: in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\loaders.py:197: in get_source
+    pieces = split_template_path(template)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\loaders.py:30: in split_template_path
+    for piece in template.split("/"):
+                 ^^^^^^^^^^^^^^
+E   AttributeError: 'dict' object has no attribute 'split'
+
+During handling of the above exception, another exception occurred:
+tests\test_admin.py:2: in test_admin_dashboard_access
+    resp = client.get("/admin", headers={"Authorization": f"Bearer {admin_token}"})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpx\_client.py:1053: in get
+    return self.request(
+venv\Lib\site-packages\starlette\testclient.py:518: in request
+    return super().request(
+venv\Lib\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+venv\Lib\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+venv\Lib\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\starlette\testclient.py:419: in handle_request
+    stack.close()
+..\..\..\AppData\Local\Programs\Python\Python314\Lib\contextlib.py:627: in close
+    self.__exit__(None, None, None)
+..\..\..\AppData\Local\Programs\Python\Python314\Lib\contextlib.py:619: in __exit__
+    raise exc
+..\..\..\AppData\Local\Programs\Python\Python314\Lib\contextlib.py:604: in __exit__
+    if cb(*exc_details):
+       ^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\starlette\testclient.py:399: in close_app
+    raise exception
+venv\Lib\site-packages\anyio\from_thread.py:272: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\starlette\testclient.py:366: in run_app
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\fastapi\applications.py:1194: in __call__
+    await super().__call__(scope, receive, send)
+venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv\Lib\site-packages\starlette\middleware\errors.py:176: in __call__
+    response = await self.handler(request, exc)  # type: ignore[assignment, arg-type]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\main.py:107: in server_error_handler
+    return templates.TemplateResponse("errors/500.html", {"request": request}, status_code=500)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\starlette\templating.py:148: in TemplateResponse
+    template = self.get_template(name)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\starlette\templating.py:115: in get_template
+    return self.env.get_template(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\environment.py:1016: in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\environment.py:964: in _load_template
+    template = self.cache.get(cache_key)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\jinja2\utils.py:477: in get
+    return self[key]
+           ^^^^^^^^^
+venv\Lib\site-packages\jinja2\utils.py:515: in __getitem__
+    rv = self._mapping[key]
+         ^^^^^^^^^^^^^^^^^^
+E   TypeError: cannot use 'tuple' as a dict key (unhashable type: 'dict')
+---------------------------- Captured stderr setup ----------------------------
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/auth/login "HTTP/1.1 200 OK"
+----------------------------- Captured log setup ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/v1/auth/login "HTTP/1.1 200 OK"
+---------------------------- Captured stderr call -----------------------------
+ERROR:dairy:Server error: 'dict' object has no attribute 'split'
+------------------------------ Captured log call ------------------------------
+ERROR    dairy:main.py:104 Server error: 'dict' object has no attribute 'split'
+____________________________ test_remove_from_cart ____________________________
+tests\test_cart.py:69: in test_remove_from_cart
+    assert resp.status_code == 200
+E   assert 422 == 200
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+---------------------------- Captured stderr call -----------------------------
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/cart/add "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/cart/remove "HTTP/1.1 422 Unprocessable Entity"
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/v1/cart/add "HTTP/1.1 200 OK"
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/v1/cart/remove "HTTP/1.1 422 Unprocessable Entity"
+============================== warnings summary ===============================
+venv\Lib\site-packages\fastapi\testclient.py:1
+  c:\Users\ADMIN\Documents\chegoland\dairy-farm-app\venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app\main.py:74
+  c:\Users\ADMIN\Documents\chegoland\dairy-farm-app\app\main.py:74: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv\Lib\site-packages\fastapi\applications.py:4723
+  c:\Users\ADMIN\Documents\chegoland\dairy-farm-app\venv\Lib\site-packages\fastapi\applications.py:4723: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+venv\Lib\site-packages\_pytest\config\__init__.py:1636
+  c:\Users\ADMIN\Documents\chegoland\dairy-farm-app\venv\Lib\site-packages\_pytest\config\__init__.py:1636: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_admin.py::test_admin_dashboard_access - TypeError: cannot use 'tuple' as a dict key (unhashable type: 'dict')
+FAILED tests/test_cart.py::test_remove_from_cart - assert 422 == 200
+ +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+================== 2 failed, 24 passed, 4 warnings in 27.52s ==================

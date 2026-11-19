@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: dairy_farm
+      POSTGRES_USER: dairy_user
+      POSTGRES_PASSWORD: dairy_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dairy_user -d dairy_farm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg2://dairy_user:dairy_pass@db:5432/dairy_farm
+      MPESA_MOCK_MODE: "true"
+      SECRET_KEY: dev-secret-key-change-in-production
+      ADMIN_EMAIL: admin@chegoland.com
+      ADMIN_PASSWORD: Admin123!
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+    command: >
+      sh -c "alembic upgrade head && python scripts/seed.py && gunicorn -k uvicorn.workers.UvicornWorker -w 4 -b 0.0.0.0:8000 app.main:app"
+
+volumes:
+  postgres_data:
