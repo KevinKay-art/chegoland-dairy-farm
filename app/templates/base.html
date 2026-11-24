@@ -3,22 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ app_name }}</title>
+    <meta name="description" content="{{ app_name }} — fresh, hygienic, locally produced milk delivered to your doorstep in Kapcholyo, Kaplong and its environs.">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='img/favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', path='img/favicon.svg') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
-    <style>
+    <script defer src="{{ url_for('static', path='js/app.js') }}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+        :root { --pasture-green: #2E7D32; --pasture-green-dark: #1B5E20; --cream: #FFF8E7; --accent-gold: #F9A825; }
         body { font-family: 'Nunito', sans-serif; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
-        .bg-pasture-green { background-color: #2E7D32; }
-        .text-pasture-green { color: #2E7D32; }
-        .border-pasture-green { border-color: #2E7D32; }
-        .bg-cream { background-color: #FFF8E7; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
+        .bg-pasture-green { background-color: var(--pasture-green); }
+        .text-pasture-green { color: var(--pasture-green); }
+        .border-pasture-green { border-color: var(--pasture-green); }
+        .bg-pasture-green-dark { background-color: var(--pasture-green-dark); }
+        .bg-cream { background-color: var(--cream); }
+        .text-accent-gold { color: var(--accent-gold); }
         .shadow-soft { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .shadow-medium { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .transition-all { transition: all 0.3s ease; }
+        .hover-lift:hover { transform: translateY(-4px); }
+        .badge { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold; }
+        .badge-stock { @apply badge bg-green-100 text-green-700; }
+        .badge-low-stock { @apply badge bg-amber-100 text-amber-700; }
+        .badge-out { @apply badge bg-red-100 text-red-700; }
+        .card-hover { @apply transition-all duration-300 hover:shadow-medium hover:-translate-y-1; }
+        .input-field { @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pasture-green outline-none; }
+        .label-text { @apply block text-sm font-semibold text-gray-700 mb-2; }
     </style>
 </head>
-<body class="bg-cream text-gray-800 min-h-screen">
+<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
+    {% block navbar %}
+    <nav class="navbar">
+        <div class="container">
+            <div class="flex justify-between w-full items-center">
+                <div class="flex items-center gap-2">
+                    <div class="brand-mark">C</div>
+                    <span class="brand-name">{{ app_name }}</span>
+                </div>
+                <div class="nav-links hidden md:flex items-center gap-6">
+                    <a href="/" class="text-pasture-green font-bold">Home</a>
+                    <a href="/shop" class="text-gray-600 font-medium hover:text-pasture-green">Shop</a>
+                    <a href="/cows" class="text-gray-600 font-medium hover:text-pasture-green">Our Cows</a>
+                    <a href="/about" class="text-gray-600 font-medium hover:text-pasture-green">About</a>
+                    <a href="/contact" class="text-gray-600 font-medium hover:text-pasture-green">Contact</a>
+                    {% if user and user.role == "admin" %}
+                    <a href="/admin" class="text-pasture-green font-bold">Admin</a>
+                    {% endif %}
+                </div>
+                <div class="nav-actions flex items-center gap-4">
+                    <a href="/cart" class="cart-link relative text-gray-600 hover:text-pasture-green">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="cart-badge">{{ cart_count|default(0) }}</span>
+                    </a>
+                    {% if user %}
+                    <div class="user-menu" id="user-menu">
+                        <button class="user-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-sm">{{ user.full_name }}</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown">
+                            <a href="/account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pasture-green-light hover:text-pasture-green-dark">My Account</a>
+                            {% if user.role == "admin" %}
+                            <a href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pasture-green-light hover:text-pasture-green-dark">Admin Dashboard</a>
+                            {% endif %}
+                            <div class="divider"></div>
+                            <form action="/logout" method="POST" class="block">
+                                <button class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="/login" class="btn btn-nav btn--primary btn--sm">Login</a>
+                    <a href="/register" class="btn btn-nav btn--outline btn--sm">Register</a>
+                    {% endif %}
+                    <button id="mobile-menu-btn" class="mobile-menu-btn md:hidden" aria-label="Toggle menu" aria-expanded="false" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden">
+            <ul class="mobile-list">
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
+                <li><a href="/cows">Our Cows</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                {% if user %}
+                <li><a href="/account">My Account</a></li>
+                {% if user.role == "admin" %}<li><a href="/admin">Admin Dashboard</a></li>{% endif %}
+                <li><form action="/logout" method="POST" style="margin:0;"><button class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium" style="border:none;background:inherit;">Logout</button></form></li>
+                {% else %}
+                <li><a href="/login" class="bg-pasture-green text-white text-center rounded-lg font-bold">Login</a></li>
+                <li><a href="/register" class="border border-pasture-green text-pasture-green text-center rounded-lg font-bold">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endblock %}
+    {% block hero %}{% endblock %}
     {% block content %}{% endblock %}
+    {% block footer %}
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div class="footer__brand">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="brand-mark">C</div>
+                        <span class="brand-name">{{ app_name }}</span>
+                    </div>
+                    <p>Fresh dairy from our zero-grazing herd &bull; Kapcholyo, Kaplong &amp; its environs</p>
+                    <div class="socials">
+                        <a href="https://wa.me/254700000000" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul class="link-list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/shop">Shop</a></li>
+                        <li><a href="/cows">Our Cows</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <div class="contact-item"><i class="fas fa-phone"></i><span>WhatsApp: <a href="https://wa.me/254700000000" class="hover:underline">+254 700 000 000</a></span></div>
+                    <div class="contact-item"><i class="fas fa-clock"></i><span>Mon - Sat: 8am - 6pm</span></div>
+                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>Kapcholyo, Kaplong, Kenya</span></div>
+                </div>
+                <div>
+                    <h4>Newsletter</h4>
+                    <p class="mb-4">Subscribe for farm updates</p>
+                    <div class="newsletter">
+                        <input type="email" placeholder="Your email">
+                        <button type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                &copy; 2026 Chegoland. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+    {% block scripts %}{% endblock %}
 </body>
 </html>

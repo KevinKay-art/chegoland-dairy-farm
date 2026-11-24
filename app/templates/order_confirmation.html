@@ -1,29 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation | {{ app_name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Nunito', sans-serif; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
-        .bg-pasture-green { background-color: #2E7D32; }
-        .text-pasture-green { color: #2E7D32; }
-        .bg-cream { background-color: #FFF8E7; }
-    </style>
-</head>
-<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
-    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
-                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }}</span>
-            </div>
-            <a href="/" class="text-gray-700 hover:text-pasture-green">Home</a>
-        </div>
-    </nav>
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation | {{ app_name }}{% endblock %}
+
+{% block content %}
 
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1">
         <div class="text-center py-12">
@@ -48,10 +27,4 @@
         </div>
     </div>
 
-    <footer class="bg-pasture-green text-white py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }}</p>
-        </div>
-    </footer>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B7E4C7"/>
+      <stop offset="100%" stop-color="#FFFDF7"/>
+    </linearGradient>
+    <linearGradient id="pasture" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7CB342"/>
+      <stop offset="100%" stop-color="#2E7D32"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect y="620" width="1600" height="280" fill="url(#pasture)"/>
+  <path d="M0 620 Q 400 560 800 620 T 1600 620 V 900 H 0 Z" fill="#558B2F"/>
+  <!-- cow silhouettes -->
+  <g fill="#FFFFFF" opacity="0.95">
+    <ellipse cx="300" cy="700" rx="90" ry="50"/>
+    <circle cx="370" cy="675" r="34"/>
+    <rect x="385" y="665" width="30" height="18" rx="4"/>
+    <ellipse cx="300" cy="710" rx="22" ry="14" fill="#1B5E20"/>
+    <ellipse cx="260" cy="710" rx="22" ry="14" fill="#1B5E20"/>
+    <ellipse cx="620" cy="730" rx="110" ry="60"/>
+    <circle cx="705" cy="700" r="40"/>
+    <rect x="720" y="690" width="34" height="20" rx="4"/>
+    <ellipse cx="620" cy="742" rx="26" ry="16" fill="#1B5E20"/>
+    <ellipse cx="570" cy="742" rx="26" ry="16" fill="#1B5E20"/>
+    <ellipse cx="1050" cy="715" rx="80" ry="45"/>
+    <circle cx="1110" cy="690" r="30"/>
+    <rect x="1120" y="680" width="28" height="16" rx="4"/>
+    <ellipse cx="1050" cy="728" rx="20" ry="12" fill="#1B5E20"/>
+    <ellipse cx="1005" cy="728" rx="20" ry="12" fill="#1B5E20"/>
+  </g>
+</svg>

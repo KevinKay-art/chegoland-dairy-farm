@@ -1,49 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cows | {{ app_name }} Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Nunito', sans-serif; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
-        .bg-pasture-green { background-color: #2E7D32; }
-        .text-pasture-green { color: #2E7D32; }
-        .bg-cream { background-color: #FFF8E7; }
-        .shadow-soft { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-    </style>
-</head>
-<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
-    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
-                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }} Admin</span>
-            </div>
-            <div class="flex items-center gap-6">
-                <a href="/" class="text-gray-700 hover:text-pasture-green text-sm">View Store</a>
-                <a href="/admin" class="text-gray-700 hover:text-pasture-green text-sm">Dashboard</a>
-                <a href="/admin/products" class="text-gray-700 hover:text-pasture-green text-sm">Products</a>
-                <a href="/admin/orders" class="text-gray-700 hover:text-pasture-green text-sm">Orders</a>
-                <a href="/admin/cows" class="text-pasture-green font-bold text-sm">Cows</a>
-                <a href="/admin/milk" class="text-gray-700 hover:text-pasture-green text-sm">Milk</a>
-                <a href="/admin/customers" class="text-gray-700 hover:text-pasture-green text-sm">Customers</a>
-                <a href="/admin/reports" class="text-gray-700 hover:text-pasture-green text-sm">Reports</a>
-            </div>
-            <a href="/logout" class="text-gray-500 hover:text-red-500 text-sm">Logout</a>
-        </div>
-    </nav>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
-        <div class="flex justify-between items-end mb-6">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Cattle Management</h1>
-                <p class="text-gray-600">Track each cow's breed, status, and productivity</p>
-            </div>
-        </div>
+{% extends "base.html" %}
 
-        <div class="bg-white rounded-xl shadow-soft border border-gray-100 overflow-hidden">
+{% block title %}Cattle Management | {{ app_name }} Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Cattle Management</h1>
+            <p class="text-gray-600">Track each cow's breed, status, and productivity</p>
+        </div>
+        <button onclick="openAddCowModal()" class="btn-primary">
+            <i class="fas fa-plus mr-2"></i>Add Cow
+        </button>
+    </div>
+
+    <!-- Add Cow Modal -->
+    <div id="addCowModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeAddCowModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-medium w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Add New Cow</h2>
+                <button onclick="closeAddCowModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="addCowForm" enctype="multipart/form-data" class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="label-text">Tag Number *</label>
+                        <input type="text" name="tag_number" required class="input-field" placeholder="e.g. COW-001">
+                    </div>
+                    <div>
+                        <label class="label-text">Name *</label>
+                        <input type="text" name="name" required class="input-field" placeholder="e.g. Bessie">
+                    </div>
+                </div>
+                <div>
+                    <label class="label-text">Breed *</label>
+                    <select name="breed" required class="input-field">
+                        <option value="">Select breed</option>
+                        <option value="Friesian">Friesian</option>
+                        <option value="Ayrshire">Ayrshire</option>
+                        <option value="Jersey">Jersey</option>
+                        <option value="Guernsey">Guernsey</option>
+                        <option value="Crossbreed">Crossbreed</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="label-text">Date of Birth</label>
+                        <input type="date" name="date_of_birth" class="input-field">
+                    </div>
+                    <div>
+                        <label class="label-text">Status</label>
+                        <select name="status" class="input-field">
+                            <option value="lactating">Lactating</option>
+                            <option value="dry">Dry</option>
+                            <option value="pregnant">Pregnant</option>
+                            <option value="sick">Sick</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-text">Daily Avg Yield (Litres)</label>
+                    <input type="number" name="daily_avg_yield" step="0.1" min="0" value="0" class="input-field" placeholder="0.0">
+                </div>
+                <div>
+                    <label class="label-text">Photo</label>
+                    <input type="file" name="photo" accept="image/*" class="input-field">
+                    <p class="text-xs text-gray-500 mt-1">Optional. Leave blank to use default cow image.</p>
+                </div>
+                <div>
+                    <label class="label-text">Notes</label>
+                    <textarea name="notes" rows="3" class="input-field" placeholder="Any additional notes..."></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button type="button" onclick="closeAddCowModal()" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-primary" id="addCowBtn">
+                        <i class="fas fa-cow mr-2"></i>Add Cow
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50"></div>
+
+    <!-- Cows Table -->
+    <div class="bg-white rounded-xl shadow-soft border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead>
                     <tr class="border-b border-gray-200 bg-gray-50">
@@ -53,31 +99,123 @@
                         <th class="px-6 py-3 text-gray-800 font-bold">Breed</th>
                         <th class="px-6 py-3 text-gray-800 font-bold">Status</th>
                         <th class="px-6 py-3 text-gray-800 font-bold">Avg Yield</th>
+                        <th class="px-6 py-3 text-gray-800 font-bold text-right">Actions</th>
                     </tr>
-                </thead>
-                <tbody>
+                <tbody id="cowsTableBody">
                     {% for c in cows %}
-                    <tr class="border-b border-gray-100">
+                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors" id="cow-row-{{ c.id }}">
                         <td class="px-6 py-3"><img src="{{ c.photo_url or 'https://images.unsplash.com/photo-1590588292422-8399e897c50b?w=200&auto=format&fit=crop' }}" alt="{{ c.name }}" class="w-12 h-12 rounded object-cover"></td>
-                        <td class="px-6 py-3 font-mono text-sm">{{ c.tag_number }}</td>
+                        <td class="px-6 py-3 font-mono text-sm font-medium">{{ c.tag_number }}</td>
                         <td class="px-6 py-3 font-medium">{{ c.name }}</td>
                         <td class="px-6 py-3 text-gray-600 text-sm">{{ c.breed }}</td>
                         <td class="px-6 py-3"><span class="inline-block px-2 py-1 rounded text-xs font-medium {% if c.status=='lactating' %}bg-green-100 text-green-700{% elif c.status=='dry' %}bg-gray-100 text-gray-700{% elif c.status=='pregnant' %}bg-blue-100 text-blue-700{% else %}bg-red-100 text-red-700{% endif %}">{{ c.status|capitalize }}</span></td>
                         <td class="px-6 py-3">{{ "%.1f"|format(c.daily_avg_yield) }} L/day</td>
+                        <td class="px-6 py-3 text-right">
+                            <button onclick="deleteCow('{{ c.id }}', '{{ c.name }}')" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="6" class="px-6 py-8 text-center text-gray-600">No cows found.</td></tr>
+                    <tr><td colspan="7" class="px-6 py-12 text-center text-gray-600">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-2xl">
+                                <i class="fas fa-cow"></i>
+                            </div>
+                            <p class="text-sm">No cows found.</p>
+                            <button onclick="openAddCowModal()" class="btn-primary mt-2">Add Your First Cow</button>
+                        </div>
+                    </td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <footer class="bg-pasture-green text-white py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }}</p>
-        </div>
-    </footer>
-</body>
-</html>
+<script>
+    function openAddCowModal() {
+        document.getElementById('addCowModal').classList.remove('hidden');
+        document.getElementById('addCowForm').reset();
+    }
+
+    function closeAddCowModal() {
+        document.getElementById('addCowModal').classList.add('hidden');
+    }
+
+    document.getElementById('addCowForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('addCowBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i>Adding...';
+        btn.disabled = true;
+
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('/api/v1/cows', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                showToast('Cow added successfully!', 'success');
+                closeAddCowModal();
+                setTimeout(() => location.reload(), 800);
+            } else {
+                showToast(result.detail || 'Failed to add cow', 'error');
+            }
+        } catch (err) {
+            showToast('Network error. Please try again.', 'error');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+
+    async function deleteCow(cowId, cowName) {
+        if (!confirm('Are you sure you want to delete "' + cowName + '"? This cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/v1/cows/' + cowId, {
+                method: 'DELETE',
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                showToast('"' + cowName + '" deleted successfully', 'success');
+                const row = document.getElementById('cow-row-' + cowId);
+                if (row) {
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(-20px)';
+                    setTimeout(() => row.remove(), 300);
+                }
+            } else {
+                showToast(result.detail || 'Failed to delete cow', 'error');
+            }
+        } catch (err) {
+            showToast('Network error. Please try again.', 'error');
+        }
+    }
+
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        const bgColor = type === 'success' ? 'bg-pasture-green' : 'bg-red-600';
+        toast.innerHTML = '<div class="' + bgColor + ' text-white px-6 py-4 rounded-lg shadow-medium flex items-center gap-3 min-w-[300px]"><i class="fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle') + '"></i><span class="font-medium">' + message + '</span></div>';
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+            toast.classList.add('translate-y-20', 'opacity-0');
+        }, 4000);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeAddCowModal();
+        }
+    });
+</script>
 

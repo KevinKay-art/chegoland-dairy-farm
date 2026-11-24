@@ -1,60 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | {{ app_name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Nunito', sans-serif; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
-        .bg-pasture-green { background-color: #2E7D32; }
-        .text-pasture-green { color: #2E7D32; }
-        .bg-cream { background-color: #FFF8E7; }
-    </style>
-</head>
-<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
-    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
-                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }}</span>
+{% extends "base.html" %}
+
+{% block title %}Our Story | {{ app_name }}{% endblock %}
+
+{% block content %}
+<!-- Story hero -->
+<section class="hero" style="padding: 70px 0;">
+    <img src="{{ url_for('static', path='img/hero-placeholder.svg') }}" alt="Chegoland farm at Kapcholyo, Kaplong &mdash; green pastures and zero-grazing dairy unit" class="hero__bg" loading="lazy" decoding="async">
+    <div class="hero__overlay"></div>
+    <div class="container">
+        <p class="hero__eyebrow">Our Story</p>
+        <h1>Our Story</h1>
+        <p class="lead">
+            From a small herd in Kapcholyo, Kaplong to your doorstep &mdash; Chegoland has always been about fresh, hygienic, locally produced milk you can trust.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <!-- Our Story -->
+        <div class="section-header" style="text-align:left;">
+            <span class="section-header__kicker">Our Story</span>
+            <h2>How Chegoland Started</h2>
+        </div>
+        <div class="card panel p-10 lg:p-14">
+            <p class="text-lg leading-relaxed mb-6">
+                Chegoland began with a simple belief: every family deserves milk that is fresh, clean and honestly produced.
+                Located in <strong>Kapcholyo, Kaplong and its environs</strong>, our zero-grazing dairy unit keeps happy,
+                healthy cows fed on nutritious fodder and milked hygienically twice daily &mdash; morning and evening.
+            </p>
+            <p class="text-lg leading-relaxed mb-0">
+                We cut out the middlemen so milk goes straight from our cows to your doorstep. No delays, no compromises &mdash;
+                just fresh, nutritious, locally produced dairy, every single day.
+            </p>
+        </div>
+
+        <!-- Mission and Values -->
+        <div class="section-header mt-16 mb-8">
+            <span class="section-header__kicker">Mission &amp; Values</span>
+            <h2>What Drives Us</h2>
+            <p>Our promise to every customer, every delivery.</p>
+        </div>
+        <div class="icon-grid">
+            <div class="icon-tile">
+                <div class="icon-tile__icon"><i class="fas fa-snowflake"></i></div>
+                <h4>Freshness</h4>
+                <p>Milk delivered within hours of milking, kept cold from farm to door.</p>
             </div>
-            <a href="/" class="text-gray-700 hover:text-pasture-green">Home</a>
-            <div class="flex items-center gap-4">
-                <a href="/cart" class="text-gray-700 hover:text-pasture-green"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 110 4 2 2 0 010-4z"></path></svg></a>
-                {% if user %}<a href="/account" class="text-gray-700 hover:text-pasture-green text-sm">{{ user.full_name }}</a>{% if user.role == "admin" %} <a href="/admin" class="text-pasture-green font-bold text-sm underline">Admin Dashboard</a>{% endif %}{% else %}<a href="/login" class="bg-pasture-green text-white px-4 py-2 rounded-lg text-sm">Login</a>{% endif %}
+            <div class="icon-tile">
+                <div class="icon-tile__icon"><i class="fas fa-shield-halved"></i></div>
+                <h4>Quality</h4>
+                <p>Every batch tested for purity and hygiene before it leaves the farm.</p>
+            </div>
+            <div class="icon-tile">
+                <div class="icon-tile__icon"><i class="fas fa-paw"></i></div>
+                <h4>Animal Care</h4>
+                <p>Happy, healthy cows in zero-grazing units with expert, gentle care.</p>
+            </div>
+            <div class="icon-tile">
+                <div class="icon-tile__icon"><i class="fas fa-hands-holding-circle"></i></div>
+                <h4>Community</h4>
+                <p>Locally produced, locally delivered &mdash; supporting Kapcholyo, Kaplong and its environs.</p>
             </div>
         </div>
-    </nav>
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">About {{ app_name }}</h1>
-        <div class="bg-white p-8 rounded-xl shadow-soft border border-gray-100">
-            <p class="text-gray-600 leading-relaxed mb-6">
-                At {{ app_name }}, we are passionate about producing the freshest, highest-quality dairy products.
-                Our farm is located in <strong>Kapcholyo, Kaplong and its environs</strong>, where our cows are kept in
-                zero-grazing units, fed nutritious fodder, and milked hygienically twice daily — morning and evening.
-            </p>
-            <p class="text-gray-600 leading-relaxed mb-6">
-                We believe in farm-direct delivery - no middlemen, no delays. From our cows to your doorstep,
-                every drop of milk is fresh, nutritious, and delicious.
-            </p>
-            <h3 class="text-xl font-bold text-pasture-green mb-4">Our Values</h3>
-            <ul class="list-disc pl-6 text-gray-600 space-y-3 mb-6">
-                <li>Fresh milk daily from happy, healthy cows</li>
-                <li>Strict hygiene and quality standards</li>
-                <li>Direct farm-to-door delivery</li>
-                <li>Sustainable, ethical farming practices</li>
-            </ul>
+        <!-- Our Process -->
+        <div class="section-header mt-16 mb-8">
+            <span class="section-header__kicker">Our Process</span>
+            <h2>From Cow to You</h2>
+            <p>Four simple steps that keep every drop fresh.</p>
+        </div>
+        <div class="timeline">
+            <div class="timeline__step">
+                <div class="timeline__marker">1</div>
+                <h4>Milking</h4>
+                <p>Our cows are milked hygienically twice daily &mdash; morning and evening &mdash; in clean zero-grazing stalls.</p>
+            </div>
+            <div class="timeline__step">
+                <div class="timeline__marker">2</div>
+                <h4>Testing</h4>
+                <p>Every batch is tested for purity, fat content and hygiene before it is approved for packing.</p>
+            </div>
+            <div class="timeline__step">
+                <div class="timeline__marker">3</div>
+                <h4>Packaging</h4>
+                <p>Milk is packed in clean, sealed containers under strict cold-chain conditions.</p>
+            </div>
+            <div class="timeline__step">
+                <div class="timeline__marker">4</div>
+                <h4>Delivery</h4>
+                <p>Your order is delivered fresh to your doorstep in Kapcholyo, Kaplong and surrounding towns.</p>
+            </div>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="section-header mt-16 mb-6">
+            <span class="section-header__kicker">By the Numbers</span>
+            <h2>Chegoland at a Glance</h2>
+        </div>
+        <div class="stats">
+            <!-- EDIT THESE: replace placeholder figures with real farm data -->
+            <div class="stat">
+                <div class="stat__value">40</div>
+                <div class="stat__label">Cows in our herd</div>
+            </div>
+            <div class="stat">
+                <div class="stat__value">200</div>
+                <div class="stat__label">Litres per day</div>
+            </div>
+            <div class="stat">
+                <div class="stat__value">150+</div>
+                <div class="stat__label">Happy customers</div>
+            </div>
+            <div class="stat">
+                <div class="stat__value">2</div>
+                <div class="stat__label">Milkings daily</div>
+            </div>
+        </div>
+        <p class="text-center text-sm text-gray-400 mt-6">Figures above are placeholders &mdash; update them in app/templates/about.html with real farm data.</p>
+
+        <!-- CTA -->
+        <div class="mt-16 text-center">
+            <a href="/shop" class="btn btn--primary btn--lg">Order Fresh Milk Today</a>
+        </div>
+
+        <!-- Meet the Founder -->
+        <div class="section-header mt-24 mb-8">
+            <span class="section-header__kicker">Meet the Founder</span>
+            <h2>Leadership</h2>
+        </div>
+        <div class="founder max-w-2xl mx-auto">
+            <img src="{{ url_for('static', path='img/founder-placeholder.svg') }}" alt="Alfred Langat, Founder &amp; CEO of Chegoland" class="founder__photo" loading="lazy" decoding="async">
+            <div class="founder__body">
+                <h3 class="founder__name">Alfred Langat</h3>
+                <span class="founder__role">Founder &amp; CEO, Chegoland</span>
+                <p class="founder__bio">
+                    <!-- EDIT THIS: replace with the founder's real bio -->
+                    Alfred Langat founded Chegoland with a vision of delivering fresh, hygienic, locally produced milk to every home in Kapcholyo, Kaplong and its environs. He leads the farm's commitment to ethical zero-grazing dairy practices and customer-first service.
+                </p>
+                <div class="pull-quote">
+                    <!-- EDIT THIS: replace with the founder's real quote -->
+                    "Our cows come first &mdash; happy, healthy cows give the freshest, most nutritious milk for your family."
+                </div>
+            </div>
         </div>
     </div>
-
-    <footer class="bg-pasture-green text-white py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }} &bull; Kapcholyo, Kaplong &amp; its environs</p>
-        </div>
-    </footer>
-</body>
-</html>
+</section>
+{% endblock %}

@@ -1,103 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart | {{ app_name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Nunito', sans-serif; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
-        .bg-pasture-green { background-color: #2E7D32; }
-        .text-pasture-green { color: #2E7D32; }
-        .bg-cream { background-color: #FFF8E7; }
-    </style>
-</head>
-<body class="bg-cream text-gray-800 min-h-screen flex flex-col">
-    <nav class="bg-white border-b sticky top-0 z-50 shadow-soft">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-pasture-green rounded-full flex items-center justify-center text-white font-bold">C</div>
-                <span class="font-poppins font-bold text-xl text-pasture-green">{{ app_name }}</span>
-            </div>
-            <a href="/shop" class="text-gray-700 hover:text-pasture-green">Continue Shopping</a>
-            <div class="flex items-center gap-4">
-                <a href="/cart" class="text-gray-700 hover:text-pasture-green"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 110 4 2 2 0 010-4z"></path></svg></a>
-                {% if user %}<a href="/account" class="text-gray-700 hover:text-pasture-green text-sm">{{ user.full_name }}</a>{% else %}<a href="/login" class="bg-pasture-green text-white px-4 py-2 rounded-lg text-sm">Login</a>{% endif %}
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
+
+{% block title %}Cart | {{ app_name }}{% endblock %}
+
+{% block content %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Your Shopping Cart</h2>
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Your Shopping Cart</h2>
+        <p class="text-gray-600 text-sm mb-10">Review your order before checkout</p>
         {% if not cart %}
-        <div class="text-center py-20">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Your cart is empty</h3>
-            <a href="/shop" class="bg-pasture-green text-white px-6 py-2 rounded-lg font-bold hover:bg-green-800">Start Shopping</a>
+        <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <h3>Your cart is empty</h3>
+            <p>Looks like you haven't added any milk products yet.</p>
+            <a href="/shop" class="btn btn--primary btn--sm">Start Shopping</a>
         </div>
         {% else %}
-        <div class="bg-white rounded-xl shadow-soft border border-gray-100 overflow-hidden">
-            <table class="w-full">
+        {% set namespace = namespace(total=0) %}
+        <div class="card">
+            <table class="cart-table">
                 <thead>
-                    <tr class="border-b border-gray-200">
-                        <th class="px-6 py-4 text-left text-gray-800 font-bold">Product</th>
-                        <th class="px-6 py-4 text-left text-gray-800 font-bold">Price</th>
-                        <th class="px-6 py-4 text-left text-gray-800 font-bold">Qty</th>
-                        <th class="px-6 py-4 text-left text-gray-800 font-bold">Total</th>
-                        <th class="px-6 py-4 text-left text-gray-800 font-bold">Action</th>
+                    <tr>
+                        <th class="w-1/4">Product</th>
+                        <th class="w-1/6 text-right">Price</th>
+                        <th class="w-1/6 text-center">Qty</th>
+                        <th class="w-1/6 text-right">Total</th>
+                        <th class="w-1/6">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% set namespace = namespace(total=0) %}
                     {% for pid, item in cart.items() %}
-                    <tr class="border-b border-gray-100">
-                        <td class="px-6 py-4">
+                    <tr class="cart-row" data-pid="{{ pid }}">
+                        <td class="product-cell">
                             <div class="flex items-center gap-4">
-                                <img src="{{ item.image_url or 'https://images.unsplash.com/photo-1564947779-46498e5a2a8c?w=200&auto=format&fit=crop' }}" alt="{{ item.name }}" class="w-16 h-16 rounded object-cover">
+                                <img src="{{ item.image_url or url_for('static', path='img/cow-placeholder.svg') }}" alt="{{ item.name }}" class="cart-item__thumb" loading="lazy" decoding="async">
                                 <div>
-                                    <div class="text-gray-800 font-medium">{{ item.name }}</div>
-                                    <div class="text-sm text-gray-500">{{ item.unit }}</div>
+                                    <div class="cart-item__title">{{ item.name }}</div>
+                                    <span class="cart-item__unit">{{ item.unit }}</span>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-gray-800">KES {{ "%.0f"|format(item.price) }}</td>
-                        <td class="px-6 py-4 text-center">{{ item.quantity }}</td>
-                        <td class="px-6 py-4 text-gray-800 font-medium">KES {{ "%.0f"|format(item.price * item.quantity) }}</td>
-                        <td class="px-6 py-4">
-                            <button onclick="removeFromCart('{{ pid }}')" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+                        <td class="text-right font-medium">KES {{ "%.0f"|format(item.price) }}</td>
+                        <td class="text-center">
+                            <div class="qty-selector" style="display:inline-flex;">
+                                <button type="button" data-pid="{{ pid }}" data-step="-" class="btn-qty" aria-label="Decrease quantity">&#8722;</button>
+                                <input type="number" value="{{ item.quantity }}" min="1" data-pid="{{ pid }}" class="qty-input">
+                                <button type="button" data-pid="{{ pid }}" data-step="+" class="btn-qty" aria-label="Increase quantity">&#43;</button>
+                            </div>
+                        </td>
+                        <td class="text-right font-medium item-total" data-price="{{ item.price }}">KES {{ "%.0f"|format(item.price * item.quantity) }}</td>
+                        <td class="text-right">
+                            <button type="button" data-remove="{{ pid }}" class="btn--text btn--sm text-red-600 hover:text-red-800" aria-label="Remove {{ item.name }}">Remove</button>
                         </td>
                     </tr>
                     {% set namespace.total = namespace.total + (item.price * item.quantity) %}
                     {% endfor %}
                 </tbody>
             </table>
-            <div class="p-6 border-t border-gray-200 bg-gray-50">
-                <div class="flex justify-between">
-                    <span class="text-gray-800 font-bold">Subtotal</span>
-                    <span class="text-gray-800 font-bold">KES {{ "%.0f"|format(namespace.total) }}</span>
-                </div>
-                <div class="flex justify-between mt-2">
-                    <span class="text-gray-600">Delivery Fee</span>
-                    <span class="text-gray-600">KES 150</span>
-                </div>
-                <div class="flex justify-between mt-4 pt-4 border-t border-gray-300">
-                    <span class="text-xl font-bold text-pasture-green">Total</span>
-                    <span class="text-xl font-bold text-pasture-green">KES {{ "%.0f"|format(namespace.total + 150) }}</span>
-                </div>
-                <a href="/checkout" class="w-full mt-6 block bg-pasture-green text-white py-4 rounded-lg font-bold text-lg text-center hover:bg-green-800">Proceed to Checkout</a>
+        </div>
+        <div class="order-summary mt-8">
+            <div class="totals">
+                <div class="total-row"><span>Subtotal</span><span>KES {{ "%.0f"|format(namespace.total) }}</span></div>
+                <div class="total-row"><span>Delivery Fee</span><span>KES 150</span></div>
+                <div class="total-row total"><span>Total</span><span>KES {{ "%.0f"|format(namespace.total + 150) }}</span></div>
             </div>
+            <a href="/checkout" class="btn btn--primary btn--lg btn-full mt-6">Proceed to Checkout</a>
         </div>
         {% endif %}
     </div>
-    <footer class="bg-pasture-green text-white py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-green-200 text-sm">&copy; 2026 {{ app_name }}</p>
-        </div>
-    </footer>
+
     <script>
-        function removeFromCart(pid) {
-            fetch('/api/v1/cart/remove', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({product_id: pid})}).then(() => location.reload());
-        }
+        document.querySelectorAll('.btn-qty').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var pid = btn.getAttribute('data-pid');
+                var step = btn.getAttribute('data-step') === '-' ? -1 : 1;
+                var input = document.querySelector('.qty-input[data-pid="' + pid + '"]');
+                if (!input) { return; }
+                var val = parseInt(input.value, 10) || 1;
+                var max = parseInt(input.getAttribute('max') || '99', 10);
+                var next = Math.min(Math.max(val + step, 1), max);
+                input.value = next;
+                window.cgh.updateCartQty(pid, next);
+            });
+        });
+        document.querySelectorAll('.qty-input').forEach(function (input) {
+            input.addEventListener('change', function () {
+                var pid = input.getAttribute('data-pid');
+                window.cgh.updateCartQty(pid, input.value);
+            });
+        });
+        document.querySelectorAll('[data-remove]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                window.cgh.removeFromCart(btn.getAttribute('data-remove'));
+            });
+        });
     </script>
-</body>
-</html>
+{% endblock %}

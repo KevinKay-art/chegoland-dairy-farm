@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#F5F2E3"/>
+  <ellipse cx="300" cy="210" rx="120" ry="70" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="3"/>
+  <circle cx="400" cy="180" r="45" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="3"/>
+  <rect x="420" y="172" width="40" height="22" rx="6" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="3"/>
+  <ellipse cx="300" cy="225" rx="30" ry="20" fill="#2E7D32"/>
+  <ellipse cx="255" cy="225" rx="30" ry="20" fill="#2E7D32"/>
+  <text x="300" y="310" font-family="Arial, sans-serif" font-size="22" fill="#9E9E9E" text-anchor="middle">Cow photo coming soon</text>
+</svg>
