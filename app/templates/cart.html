@@ -31,7 +31,7 @@
                     <tr class="cart-row" data-pid="{{ pid }}">
                         <td class="product-cell">
                             <div class="flex items-center gap-4">
-                                <img src="{{ item.image_url or url_for('static', path='img/cow-placeholder.svg') }}" alt="{{ item.name }}" class="cart-item__thumb" loading="lazy" decoding="async">
+                                <img src="{{ item.image_url or url_for('static', path='img/unsplash_cow_placeholder.svg') }}" alt="{{ item.name }}" class="cart-item__thumb" loading="lazy" decoding="async">
                                 <div>
                                     <div class="cart-item__title">{{ item.name }}</div>
                                     <span class="cart-item__unit">{{ item.unit }}</span>

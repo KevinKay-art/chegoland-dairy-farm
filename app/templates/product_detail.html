@@ -6,7 +6,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div class="product-card__media" style="height:420px;">
-                <img src="{{ product.image_url or url_for('static', path='img/cow-placeholder.svg') }}" alt="{{ product.name }}" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-xl shadow-soft">
+                <img src="{{ product.image_url or url_for('static', path='img/unsplash_cow_placeholder.svg') }}" alt="{{ product.name }}" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-xl shadow-soft">
             </div>
             <div>
                 <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ product.name }}</h1>

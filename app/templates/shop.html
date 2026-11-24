@@ -28,7 +28,7 @@
             {% for product in products %}
             <div class="card product-card hover-lift">
                 <div class="product-card__media">
-                    <img src="{{ product.image_url or url_for('static', path='img/cow-placeholder.svg') }}" alt="{{ product.name }}" loading="lazy" decoding="async">
+                    <img src="{{ product.image_url or url_for('static', path='img/unsplash_cow_placeholder.svg') }}" alt="{{ product.name }}" loading="lazy" decoding="async">
                     {% if product.stock_quantity > 10 %}
                     <span class="badge badge--stock product-card__badge">In Stock</span>
                     {% elif product.stock_quantity > 0 %}

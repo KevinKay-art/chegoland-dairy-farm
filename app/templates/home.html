@@ -93,7 +93,7 @@
                 {% for cow in cows %}
                 <a href="/cows/{{ cow.id }}" class="card hover-lift block">
                     <div class="product-card__media" style="height:200px;">
-                        <img src="{{ cow.photo_url or url_for('static', path='img/cow-placeholder.svg') }}" alt="{{ cow.name }} the {{ cow.breed }} dairy cow" loading="lazy" decoding="async">
+                        <img src="{{ cow.photo_url or 'https://images.unsplash.com/photo-1590588292422-8399e897c50b?w=400&auto=format&fit=crop' }}" alt="{{ cow.name }}" loading="lazy" decoding="async">
                     </div>
                     <div class="product-card__body">
                         <h3 class="product-card__name">{{ cow.name }}</h3>
@@ -127,7 +127,7 @@
                 {% for product in featured %}
                 <div class="card product-card hover-lift">
                     <div class="product-card__media">
-                        <img src="{{ product.image_url or url_for('static', path='img/cow-placeholder.svg') }}" alt="{{ product.name }}" loading="lazy" decoding="async">
+                        <img src="{{ product.image_url or url_for('static', path='img/unsplash_cow_placeholder.svg') }}" alt="{{ product.name }}" loading="lazy" decoding="async">
                     </div>
                     <div class="product-card__body">
                         <span class="badge {% if product.stock_quantity > 10 %}badge--stock{% elif product.stock_quantity > 0 %}badge--low{% else %}badge--out{% endif %}">
@@ -216,7 +216,7 @@
                     <div>
                         <div class="w-12 h-12 bg-pasture-green/20 text-pasture-green rounded-lg flex items-center justify-center mx-auto mb-4 text-xl">🚚</div>
                         <h3 class="font-bold text-lg mb-2">Free Delivery</h3>
-                        <p class="text-gray-600 text-sm">On orders above KES 1,000 within Nairobi</p>
+                        <p class="text-gray-600 text-sm">On orders above KES 1,000 within South Rift</p>
                     </div>
                     <div>
                         <div class="w-12 h-12 bg-pasture-green/20 text-pasture-green rounded-lg flex items-center justify-center mx-auto mb-4 text-xl">🕒</div>
@@ -226,7 +226,7 @@
                     <div>
                         <div class="w-12 h-12 bg-pasture-green/20 text-pasture-green rounded-lg flex items-center justify-center mx-auto mb-4 text-xl">📍</div>
                         <h3 class="font-bold text-lg mb-2">Delivery Areas</h3>
-                        <p class="text-gray-600 text-sm">Nairobi, Kiambu, Nakuru &amp; surrounding towns</p>
+                        <p class="text-gray-600 text-sm">Kericho, Bomet, Narok &amp; surrounding towns</p>
                     </div>
                 </div>
             </div>
